@@ -3,25 +3,19 @@ from detector import YOLODetector
 from tracker import Tracker
 from postprocess import MobileUsePostProcessor
 from utils import draw_annotations
-
-# URL del live de YouTube
-url = "https://www.youtube.com/watch?v=rnXIjl_Rzy4"
-
-# Captura el stream con OpenCV (requiere ffmpeg)
-# Primero, obtenemos el stream directo con yt-dlp
 import subprocess
 
+url = "https://www.youtube.com/watch?v=9NzUkgfpe9s"
+
+# Extrae la URL directa de streaming
 def get_live_stream(url):
-    # extrae URL directa de YouTube Live
-    cmd = [
-        "yt-dlp",
-        "-g",  # solo URL
-        url
-    ]
+    cmd = ["yt-dlp", "-g", url]
     stream_url = subprocess.check_output(cmd).decode().strip()
     return stream_url
 
 stream_url = get_live_stream(url)
+
+# Ahora sí OpenCV puede abrir la URL directa
 cap = cv2.VideoCapture(stream_url)
 
 # Inicializa detector, tracker y postprocess
@@ -34,17 +28,12 @@ while True:
     if not ret:
         break
 
-    # Detectar
     detections = detector.predict(frame)
-    # Trackear
     tracks = tracker.update(detections, frame)
-    # Post-process
     results = post.update(tracks, detections, frame_time=cap.get(cv2.CAP_PROP_POS_FRAMES))
-    # Dibujar y mostrar
     vis = draw_annotations(frame, tracks, results)
     cv2.imshow("MobileUse Live", vis)
 
-    # Presiona 'q' para salir
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
