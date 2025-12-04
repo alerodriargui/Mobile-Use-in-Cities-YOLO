@@ -5,7 +5,7 @@ from postprocess import MobileUsePostProcessor
 from utils import draw_annotations
 from yt_dlp import YoutubeDL   # <--- añadido
 
-url = "https://www.youtube.com/watch?v=NeAC-MfTZzU"
+url = "https://www.youtube.com/watch?v=mJL8V6bwDeE"
 
 def get_live_stream(url):
     ydl_opts = {
@@ -22,7 +22,7 @@ stream_url = get_live_stream(url)
 cap = cv2.VideoCapture(stream_url)
 
 # Inicializa detector, tracker y postprocess
-detector = YOLODetector(model_path='yolov8n.pt', classes=['person', 'cell phone'])
+detector = YOLODetector(model_path='yolov8n.pt', classes=['cell phone'])
 tracker  = Tracker()
 post = MobileUsePostProcessor(history_len=30, fps=25)
 
