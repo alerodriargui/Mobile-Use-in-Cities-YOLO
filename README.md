@@ -3,7 +3,10 @@ Este proyecto permite **detectar personas usando el móvil** en vídeo o cámara
 
 ---
 
-Para ejecutar el proyecto 
+Para ejecutar el proyecto:
 ```bash
 python yolo.py
 ```
+
+Output de ejemplo:
+![Ejemplo de detección](mobile.png)
