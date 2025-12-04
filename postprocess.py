@@ -16,17 +16,16 @@ class MobileUsePostProcessor:
             # detect if phone near person:
             has_phone = False
             for det in detections:
-                if det["class"] == "phone":
+                if det["class"] == "cell phone":
                     phone = det["bbox"]
                     person = trk.bbox
 
-                    px = (person[0] + person[2]) / 2
-                    py = (person[1] + person[3]) / 2
+                    px1, py1, px2, py2 = person
                     cx = (phone[0] + phone[2]) / 2
                     cy = (phone[1] + phone[3]) / 2
 
-                    dist = ((px - cx)**2 + (py - cy)**2)**0.5
-                    if dist < 200:
+                    # Check if phone center is inside person bbox
+                    if px1 < cx < px2 and py1 < cy < py2:
                         has_phone = True
 
             self.history[tid].append(has_phone)

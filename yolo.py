@@ -5,7 +5,7 @@ from postprocess import MobileUsePostProcessor
 from utils import draw_annotations
 from yt_dlp import YoutubeDL   # <--- añadido
 
-url = "https://www.youtube.com/watch?v=9NzUkgfpe9s"
+url = "https://www.youtube.com/watch?v=NeAC-MfTZzU"
 
 def get_live_stream(url):
     ydl_opts = {
@@ -22,7 +22,7 @@ stream_url = get_live_stream(url)
 cap = cv2.VideoCapture(stream_url)
 
 # Inicializa detector, tracker y postprocess
-detector = YOLODetector(model_path='yolov8n.pt', classes=['person'])
+detector = YOLODetector(model_path='yolov8n.pt', classes=['person', 'cell phone'])
 tracker  = Tracker()
 post = MobileUsePostProcessor(history_len=30, fps=25)
 
@@ -30,11 +30,20 @@ while True:
     ret, frame = cap.read()
     if not ret:
         break
+        
+    # Debug: print frame size once
+    if cap.get(cv2.CAP_PROP_POS_FRAMES) == 1:
+        print(f"Frame size: {frame.shape}")
 
     detections = detector.predict(frame)
     tracks = tracker.update(detections, frame)
     results = post.update(tracks, detections, frame_time=cap.get(cv2.CAP_PROP_POS_FRAMES))
     vis = draw_annotations(frame, tracks, results)
+    
+    # Resize window to fit screen
+    cv2.namedWindow("MobileUse Live", cv2.WINDOW_NORMAL)
+    cv2.resizeWindow("MobileUse Live", 1024, 600)
+    
     cv2.imshow("MobileUse Live", vis)
 
     if cv2.waitKey(1) & 0xFF == ord('q'):

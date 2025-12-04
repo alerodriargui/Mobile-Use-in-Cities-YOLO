@@ -18,4 +18,11 @@ def draw_annotations(frame, tracks, results):
         cv2.putText(frame, txt, (x1, y1 - 5),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.6, color, 2)
 
+    # Count people using phone
+    phone_count = sum(1 for r in results if r["use_phone"])
+    
+    # Display counter
+    cv2.putText(frame, f"Phone Users: {phone_count}", (20, 50),
+                cv2.FONT_HERSHEY_SIMPLEX, 1.2, (0, 0, 255), 3)
+
     return frame
